@@ -1,21 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
-const withLogger = <P extends object>(WrappedComponent: React.FC<P>) => {
-  const WrappedWithLogger: React.FC<P> = (props) => {
+type PropsWithConsoleMessage = {
+  consoleMessage?: string;
+};
+
+type MergedProps<P> = PropsWithConsoleMessage & P;
+
+const withLogger = <P extends object>(
+  WrappedComponent: React.FC<MergedProps<P>>
+) => {
+  const WrappedWithLogger: React.FC<MergedProps<P>> = (props) => {
     useEffect(() => {
       console.log(
-        `Component "${
-          WrappedComponent.displayName || WrappedComponent.name
-        }" mounted`
+        props?.consoleMessage
+          ? `${props.consoleMessage} ${
+              WrappedComponent.displayName || WrappedComponent.name
+            }`
+          : `Component "${
+              WrappedComponent.displayName || WrappedComponent.name
+            }" mounted`
       );
-    }, []);
+    }, [props?.consoleMessage]);
 
-    return <WrappedComponent {...(props as P)} />;
+    return <WrappedComponent {...props} />;
   };
 
-  // Assigning display name to the wrapped component (optional)
   WrappedWithLogger.displayName = `WithLogger(${
     WrappedComponent.displayName || WrappedComponent.name
   })`;

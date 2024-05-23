@@ -31,7 +31,7 @@ export default async function RootLayout({
             flex-col
           `}
           >
-            <Header />
+            <Header consoleMessage="Hello from" />
             <main
               className={`
               flex-1
