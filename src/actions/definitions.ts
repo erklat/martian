@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 
 export const LoginFormSchema = Yup.object().shape({
-  // name: Yup.string().min(2, "Name must be at least 2 characters long.").trim(),
   email: Yup.string()
     .required("This field is required.")
     .email("Please enter a valid email.")
@@ -17,7 +16,6 @@ export const LoginFormSchema = Yup.object().shape({
 export type FormState =
   | {
       errors?: {
-        // name?: string[];
         email: string[];
         password: string[];
       };

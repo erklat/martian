@@ -4,8 +4,13 @@ import { SignJWT, jwtVerify } from "jose";
 import { SessionPayload } from "@/actions/definitions";
 import { cookies } from "next/headers";
 
-const secretKey = 1245;
+const secretKey = "1245";
 const encodedKey = new TextEncoder().encode(secretKey);
+
+type TSessionPayload = {
+  expiresAt: Date;
+  email: string;
+};
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
@@ -26,9 +31,13 @@ export async function decrypt(session: string | undefined = "") {
   }
 }
 
-export async function createSession(userId: string) {
+export async function createSession({ email }: { email: string }) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId, expiresAt });
+  const sessionPayload: TSessionPayload = {
+    email,
+    expiresAt,
+  };
+  const session = await encrypt(sessionPayload);
 
   cookies().set("session", session, {
     httpOnly: true,
@@ -37,4 +46,8 @@ export async function createSession(userId: string) {
     sameSite: "lax",
     path: "/",
   });
+}
+
+export function deleteSession() {
+  cookies().delete("session");
 }

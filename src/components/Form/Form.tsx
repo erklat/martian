@@ -1,16 +1,41 @@
 "use client";
 import withLogger from "@/components/WithNameLogging/WithNameLogging";
+import React from "react";
 
-const FormRow = ({ children }) => {
-  return <div>{children}</div>;
+type FormChild = React.ReactElement<{
+  children: React.ReactNode | React.ReactNode[];
+}>;
+
+const FormRow = ({
+  children,
+}: {
+  children: React.ReactNode | React.ReactNode[];
+}) => {
+  return <div className="w-full flex">{children}</div>;
 };
 
-const FormCol = ({ children }) => {
-  return <div>{children}</div>;
+const FormCol = ({
+  children,
+}: {
+  children: React.ReactNode | React.ReactNode[];
+}) => {
+  return <div className="grow">{children}</div>;
 };
 
-const Form = ({ action, children }) => {
-  return <form action={action}>{children}</form>;
+const Form = ({
+  action,
+  children,
+  className,
+}: {
+  action: (payload: FormData) => void;
+  children: FormChild | FormChild[];
+  className?: string;
+}) => {
+  return (
+    <form action={action} className={className}>
+      {children}
+    </form>
+  );
 };
 
 const FormWithLogging = withLogger(Form);

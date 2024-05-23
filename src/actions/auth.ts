@@ -1,25 +1,32 @@
 "use server";
 import { redirect } from "next/navigation";
+import { ValidationError } from "yup";
 
-import { LoginFormSchema, FormState } from "@/actions/definitions";
-import { createSession } from "./session";
+import { LoginFormSchema } from "@/actions/definitions";
+import { createSession, deleteSession } from "./session";
 
-export async function login(prevState, formData: FormData) {
-  console.log(formData.getAll("email"));
-  const validatedFields = async (formData) => {
+export async function login(prevState: any, formData: FormData) {
+  const validatedFields = async (formData: FormData) => {
     try {
-      return await LoginFormSchema.validate(
+      const { email, password } = await LoginFormSchema.validate(
         {
-          // name: formData.get("name"),
-          email: formData.get("email"),
-          password: formData.get("password"),
+          email: formData.get("email") as string,
+          password: formData.get("password") as string,
         },
         { abortEarly: false }
       );
+
+      return {
+        success: true,
+        email,
+        password,
+        errors: [],
+      };
     } catch (error) {
+      const validationError = error as ValidationError;
       return {
         success: false,
-        errors: error.inner.map((err) => ({
+        errors: validationError.inner.map((err: any) => ({
           field: err.path,
           message: err.message,
         })),
@@ -42,4 +49,9 @@ export async function login(prevState, formData: FormData) {
 
     redirect("/app");
   }
+}
+
+export async function logout() {
+  deleteSession();
+  redirect("/");
 }

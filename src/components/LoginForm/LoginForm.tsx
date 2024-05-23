@@ -1,5 +1,5 @@
 "use client";
-import { useFormStatus, useFormState } from "react-dom";
+import { useFormState } from "react-dom";
 
 import withLogger from "@/components/WithNameLogging/WithNameLogging";
 import { Form, FormRow, FormCol } from "@/components/Form/Form";
@@ -13,31 +13,48 @@ const LoginForm = () => {
   const [state, formAction] = useFormState(loginAction, undefined);
   const { errors = [] } = { ...state };
 
-  const getError = (fieldName) =>
-    errors.find((error) => error.field === fieldName) ?? "";
-
-  console.log(state);
+  const getError = (fieldName: string) =>
+    errors.find((error: { field: string }) => error.field === fieldName) ?? "";
 
   return (
-    <Form action={formAction}>
-      <FormRow>
-        <FormCol>
-          <Text name="email" label="Email" error={getError("email")} />
-        </FormCol>
-      </FormRow>
-      <FormRow>
-        <FormCol>
-          <Password
-            name="password"
-            label="Password"
-            error={getError("password")}
-          />
-        </FormCol>
-      </FormRow>
-      <FormRow>
-        <Button btnText="Login" onClick={() => {}} submit />
-      </FormRow>
-    </Form>
+    <div
+      className={`
+        flex
+        flex-col
+        h-full
+        justify-center
+        items-center
+      `}
+    >
+      <Form
+        action={formAction}
+        className={`
+          flex
+          flex-wrap
+          gap-4
+        `}
+      >
+        <FormRow>
+          <FormCol>
+            <Text name="email" label="Email" error={getError("email")} />
+          </FormCol>
+        </FormRow>
+        <FormRow>
+          <FormCol>
+            <Password
+              name="password"
+              label="Password"
+              error={getError("password")}
+            />
+          </FormCol>
+        </FormRow>
+        <FormRow>
+          <Button submit className="mt-2">
+            Login
+          </Button>
+        </FormRow>
+      </Form>
+    </div>
   );
 };
 

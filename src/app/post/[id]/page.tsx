@@ -1,14 +1,12 @@
-import Button from "@/components/Button/Button";
+import { getSinglePost } from "@/utils/api";
 
-const Page = ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+import PostPage from "@/pages/PostPage/PostPage";
 
-  return (
-    <>
-      /post/[id]
-      {/* <Button /> */}
-    </>
-  );
+const Page = async ({ params }: { params: { id: number } }) => {
+  const { id: postId } = { ...params };
+  const post = await getSinglePost(postId);
+
+  return <PostPage post={post} />;
 };
 
 export default Page;

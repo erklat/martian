@@ -1,17 +1,11 @@
-import restClient from "@/api/restClient";
+import AppPage from "@/pages/AppPage/AppPage";
+import { getPostsListing } from "@/utils/api";
 
 const Page = async () => {
-  const response = await restClient.get("/posts");
-  const { data: posts } = response;
+  const data = await getPostsListing();
+  const { posts = [], users = [] } = { ...data };
 
-  console.log(posts);
-
-  return (
-    <>
-      {posts?.map((post) => post.title)}
-      <br />
-    </>
-  );
+  return <AppPage data={{ posts, users }} />;
 };
 
 export default Page;
